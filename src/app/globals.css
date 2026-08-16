@@ -78,6 +78,9 @@
   --z-overlay: 40;
   --z-modal: 50;
   --z-toast: 60;
+
+  /* ---- Type: families are injected by next/font in layout.tsx ---- */
+  --font-fallback: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 /* ============================================================================
@@ -98,14 +101,28 @@
   body {
     background: hsl(var(--surface-base));
     color: hsl(var(--text-secondary));
+    font-family: var(--font-sans), var(--font-fallback);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
-  /* Headings carry the display face and the primary text colour. */
+  /* Headings take the primary colour; the display face is opt-in via
+     .font-display so dashboard headings stay in Inter where a serif would
+     read as decorative rather than functional. */
   h1, h2, h3, h4, h5, h6 {
     color: hsl(var(--text-primary));
     text-wrap: balance;
+  }
+
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  .font-mono,
+  code, kbd, samp, pre {
+    font-family: var(--font-mono), ui-monospace, 'SF Mono', Menlo, monospace;
   }
 
   /* Every interactive element gets the same visible focus treatment.
