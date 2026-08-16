@@ -46,7 +46,7 @@ export default function MerchantDashboard() {
         <h1 className="text-2xl font-bold mb-8">Merchant Dashboard</h1>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard label="MRR" value={`$${Number(stats?.mrr ?? 0) / 1e7}`} accent />
+          <StatCard label="MRR" value={`$${Number(stats?.mrr ?? 0) / 1e7}`} emphasis />
           <StatCard label="ARR" value={`$${Number(stats?.arr ?? 0) / 1e7}`} />
           <StatCard label="Active Subs" value={stats?.activeSubscriptions ?? '—'} />
           <StatCard label="Churn Rate" value={`${stats?.churnRate ?? '0'}%`} />
