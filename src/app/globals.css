@@ -150,6 +150,30 @@
 }
 
 /* ============================================================================
+   SCROLL REVEAL
+   Driven by a class toggle from components/marketing/Reveal.tsx.
+
+   A transition rather than a keyframe animation on purpose: when the
+   reduced-motion rule below collapses the duration, a transition lands on its
+   final state instantly, whereas a cancelled animation can strand the element
+   at its starting value. That distinction is what previously left the whole
+   landing page invisible for reduced-motion users.
+   ========================================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================================
    REDUCED MOTION
    A global honour of the OS setting. Anything animated must survive this
    being on — the billing dashboards must stay fully readable and operable.
@@ -159,6 +183,16 @@
   html {
     scroll-behavior: auto;
   }
+
+  /* Content that is revealed on scroll is painted visible outright, before
+     any observer runs. Without this the page depends on JS to become
+     readable at all. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {

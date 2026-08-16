@@ -1,9 +1,6 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { Eye, Lock, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
-import { fadeUp, stagger, useReducedMotion, viewportOnce } from '../../lib/motion';
 import { Surface } from '../ui/Surface';
+import { Reveal } from './Reveal';
 
 const CAPABILITIES = [
   {
@@ -38,18 +35,10 @@ const CAPABILITIES = [
  * terms a merchant evaluates.
  */
 export function Features() {
-  const prefersReduced = useReducedMotion();
-
   return (
     <section id="platform" className="scroll-mt-24 px-4 py-20 sm:px-6">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOnce}
-        variants={stagger(prefersReduced)}
-        className="mx-auto max-w-5xl"
-      >
-        <motion.div variants={fadeUp(prefersReduced)} className="max-w-2xl">
+      <div className="mx-auto max-w-5xl">
+        <Reveal className="max-w-2xl">
           <h2 className="font-display text-3xl text-content-primary sm:text-4xl">
             What you get that a card processor cannot give you
           </h2>
@@ -58,12 +47,12 @@ export function Features() {
             to charge the right amount, and you trust a processor to actually collect.
             Both assumptions move on-chain here.
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
           {/* Lead card: the authorisation model, which is the thing everything
               else follows from. */}
-          <motion.div variants={fadeUp(prefersReduced)} className="md:col-span-2">
+          <Reveal className="md:col-span-2">
             <Surface tone="accent" padding="lg" className="relative overflow-hidden">
               <div
                 aria-hidden
@@ -83,10 +72,10 @@ export function Features() {
                 </p>
               </div>
             </Surface>
-          </motion.div>
+          </Reveal>
 
-          {CAPABILITIES.map(({ icon: Icon, title, body }) => (
-            <motion.div key={title} variants={fadeUp(prefersReduced)}>
+          {CAPABILITIES.map(({ icon: Icon, title, body }, index) => (
+            <Reveal key={title} delay={index * 60}>
               <Surface padding="lg" className="h-full">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line-strong bg-surface-overlay">
                   <Icon aria-hidden className="h-4 w-4 text-content-secondary" />
@@ -94,10 +83,10 @@ export function Features() {
                 <h3 className="mt-4 font-semibold text-content-primary">{title}</h3>
                 <p className="mt-2 text-sm text-content-secondary">{body}</p>
               </Surface>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

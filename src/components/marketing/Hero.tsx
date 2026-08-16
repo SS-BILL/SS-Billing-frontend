@@ -1,9 +1,6 @@
-'use client';
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { fadeUp, stagger, useReducedMotion } from '../../lib/motion';
+import { Reveal } from './Reveal';
 
 const FIGURES = [
   { value: '$0.00001', label: 'Median network fee' },
@@ -24,8 +21,6 @@ const FIGURES = [
  * design, which are true today and checkable, rather than fabricated traction.
  */
 export function Hero() {
-  const prefersReduced = useReducedMotion();
-
   return (
     <section className="relative overflow-hidden px-4 pb-20 pt-16 sm:px-6 sm:pt-24">
       {/* Single restrained wash. The old hero stacked three radial gradients
@@ -35,41 +30,29 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_60%_60%_at_50%_0%,hsl(var(--primary)/0.10),transparent)]"
       />
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={stagger(prefersReduced)}
-        className="relative mx-auto max-w-3xl text-center"
-      >
-        <motion.p
-          variants={fadeUp(prefersReduced)}
-          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-3 py-1.5 text-xs font-medium text-content-muted"
+      <div className="relative mx-auto max-w-3xl text-center">
+        <Reveal className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-3 py-1.5 text-xs font-medium text-content-muted"
         >
           <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-primary" />
           Running on Stellar Soroban
-        </motion.p>
+        </Reveal>
 
-        <motion.h1
-          variants={fadeUp(prefersReduced)}
-          className="font-display mt-6 text-4xl leading-[1.05] text-content-primary sm:text-6xl"
+        <h1
+          className="reveal reveal-visible font-display mt-6 text-4xl leading-[1.05] text-content-primary sm:text-6xl"
         >
           Recurring payments that
           <br />
           <span className="italic text-primary">collect themselves</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          variants={fadeUp(prefersReduced)}
-          className="mx-auto mt-5 max-w-prose text-base text-content-secondary"
+        <Reveal delay={60} className="mx-auto mt-5 max-w-prose text-base text-content-secondary"
         >
           Your subscriber signs once. After that a smart contract charges them on
           schedule — no card processor, no chargebacks, no billing cron of your
           own to keep alive at 3am.
-        </motion.p>
+        </Reveal>
 
-        <motion.div
-          variants={fadeUp(prefersReduced)}
-          className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+        <Reveal delay={120} className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <Link
             href="/merchant"
@@ -84,11 +67,10 @@ export function Hero() {
           >
             Manage my subscriptions
           </Link>
-        </motion.div>
+        </Reveal>
 
-        <motion.dl
-          variants={fadeUp(prefersReduced)}
-          className="mx-auto mt-14 grid max-w-xl grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3"
+        <dl
+          className="reveal reveal-visible mx-auto mt-14 grid max-w-xl grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3"
         >
           {FIGURES.map(({ value, label }) => (
             <div key={label} className="bg-surface-raised px-4 py-5 text-center">
@@ -103,8 +85,8 @@ export function Hero() {
               </dd>
             </div>
           ))}
-        </motion.dl>
-      </motion.div>
+        </dl>
+      </div>
     </section>
   );
 }

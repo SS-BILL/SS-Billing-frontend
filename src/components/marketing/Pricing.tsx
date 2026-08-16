@@ -1,11 +1,8 @@
-'use client';
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Check, Minus } from 'lucide-react';
 import { cn } from '../../lib/cn';
-import { fadeUp, stagger, useReducedMotion, viewportOnce } from '../../lib/motion';
 import { Surface } from '../ui/Surface';
+import { Reveal } from './Reveal';
 
 /**
  * The protocol itself charges nothing, so the honest presentation is a
@@ -48,18 +45,10 @@ const COLUMNS = [
 ] as const;
 
 export function Pricing() {
-  const prefersReduced = useReducedMotion();
-
   return (
     <section id="pricing" className="scroll-mt-24 px-4 py-20 sm:px-6">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOnce}
-        variants={stagger(prefersReduced)}
-        className="mx-auto max-w-4xl"
-      >
-        <motion.div variants={fadeUp(prefersReduced)} className="max-w-2xl">
+      <div className="mx-auto max-w-4xl">
+        <Reveal className="max-w-2xl">
           <h2 className="font-display text-3xl text-content-primary sm:text-4xl">
             The protocol takes nothing
           </h2>
@@ -68,11 +57,11 @@ export function Pricing() {
             network fee per charge, which is a fraction of a cent. Here is how that
             compares with the alternative, including where cards are genuinely better.
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {COLUMNS.map((column) => (
-            <motion.div key={column.name} variants={fadeUp(prefersReduced)}>
+          {COLUMNS.map((column, index) => (
+            <Reveal key={column.name} delay={index * 60}>
               <Surface
                 tone={column.emphasis ? 'accent' : 'raised'}
                 padding="lg"
@@ -124,17 +113,14 @@ export function Pricing() {
                   </Link>
                 )}
               </Surface>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
 
-        <motion.p
-          variants={fadeUp(prefersReduced)}
-          className="mt-4 text-xs text-content-muted"
-        >
+        <Reveal className="mt-4 text-xs text-content-muted">
           Rates as published, {RATES_AS_OF}. Network fees vary with Stellar congestion.
-        </motion.p>
-      </motion.div>
+        </Reveal>
+      </div>
     </section>
   );
 }

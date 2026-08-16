@@ -1,7 +1,4 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import { fadeUp, stagger, useReducedMotion, viewportOnce } from '../../lib/motion';
+import { Reveal } from './Reveal';
 
 const STEPS = [
   {
@@ -23,32 +20,24 @@ const STEPS = [
 ] as const;
 
 export function HowItWorks() {
-  const prefersReduced = useReducedMotion();
-
   return (
     <section id="how-it-works" className="scroll-mt-24 border-y border-line bg-surface-sunken px-4 py-20 sm:px-6">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOnce}
-        variants={stagger(prefersReduced)}
-        className="mx-auto max-w-5xl"
-      >
-        <motion.h2
-          variants={fadeUp(prefersReduced)}
-          className="font-display text-3xl text-content-primary sm:text-4xl"
-        >
-          Four steps, then it is someone else’s problem
-        </motion.h2>
+      <div className="mx-auto max-w-5xl">
+        <Reveal>
+          <h2 className="font-display text-3xl text-content-primary sm:text-4xl">
+            Four steps, then it is someone else’s problem
+          </h2>
+        </Reveal>
 
         {/* An ordered list, because the order is the content. The previous
             version was a div grid with the numbers painted on as decoration,
             so nothing conveyed sequence to a screen reader. */}
         <ol className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(({ title, body }, index) => (
-            <motion.li
+            <Reveal
+              as="li"
               key={title}
-              variants={fadeUp(prefersReduced)}
+              delay={index * 60}
               className="flex flex-col bg-surface-raised p-6"
             >
               <span
@@ -59,10 +48,10 @@ export function HowItWorks() {
               </span>
               <h3 className="mt-3 font-semibold text-content-primary">{title}</h3>
               <p className="mt-2 text-sm text-content-secondary">{body}</p>
-            </motion.li>
+            </Reveal>
           ))}
         </ol>
-      </motion.div>
+      </div>
     </section>
   );
 }
