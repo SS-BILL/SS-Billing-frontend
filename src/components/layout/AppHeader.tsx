@@ -29,8 +29,8 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-sticky border-b border-line bg-surface-base/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <div className="flex items-center gap-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-6">
           <Logo />
 
           {/* aria-label distinguishes this from the footer's nav landmark. */}

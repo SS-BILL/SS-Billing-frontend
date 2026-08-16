@@ -85,9 +85,14 @@ export function WalletButton() {
         }}
         isLoading={connecting}
         loadingText="Connecting…"
-        leadingIcon={<Wallet aria-hidden className="h-4 w-4" />}
+        leadingIcon={<Wallet aria-hidden className="h-4 w-4 shrink-0" />}
       >
-        Connect wallet
+        {/* Shortens to "Connect" on narrow screens. At 375px the full label
+            pushed the button past the right edge of the viewport. Kept as
+            visible text rather than collapsing to an icon, because an
+            icon-only primary action is the least discoverable control on the
+            page and this is the one thing a new user must find. */}
+        Connect<span className="hidden sm:inline">&nbsp;wallet</span>
       </Button>
 
       {error && (
