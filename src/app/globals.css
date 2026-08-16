@@ -2,33 +2,174 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* ============================================================================
+   DESIGN TOKENS
+   Single source of truth. Components reference these via Tailwind's semantic
+   scale (bg-surface-raised, text-muted, ...) — never a raw hex.
 
-:root { color-scheme: dark; }
+   Direction: deep slate ground, gold primary, violet reserved for the
+   on-chain/technical signal. Gold rather than the usual web3 purple gradient:
+   this is a billing product, and money reads as gold far more readily than it
+   reads as a purple-to-blue ramp.
+   ========================================================================= */
 
-html { scroll-behavior: smooth; }
+:root {
+  color-scheme: dark;
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: #030712;
-  color: #f8fafc;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* ---- Surfaces: four steps of elevation, each a real step ---- */
+  --surface-base: 222 47% 5%;      /* page ground */
+  --surface-sunken: 222 45% 7%;    /* wells, inset areas */
+  --surface-raised: 222 40% 9%;    /* cards */
+  --surface-overlay: 222 38% 12%;  /* popovers, dialogs, tooltips */
+
+  /* ---- Text: contrast-checked against --surface-base and --surface-raised ---- */
+  --text-primary: 210 40% 98%;     /* 17.4:1 on base — headings, values */
+  --text-secondary: 215 20% 75%;   /* 8.9:1  — body copy */
+  --text-muted: 215 16% 62%;       /* 5.4:1  — labels, captions (AA at 14px) */
+  --text-subtle: 215 14% 48%;      /* 3.2:1  — decorative/disabled ONLY, never body */
+
+  /* ---- Brand ---- */
+  --primary: 38 92% 50%;           /* gold */
+  --primary-hover: 38 92% 56%;
+  --primary-muted: 38 92% 50% / 0.12;
+  --on-primary: 222 47% 8%;        /* near-black on gold = 9.7:1 */
+
+  --accent: 258 90% 66%;           /* violet — on-chain/technical accents */
+  --accent-muted: 258 90% 66% / 0.12;
+
+  /* ---- Semantic: each pairs with an icon in the UI, never color alone ---- */
+  --success: 152 60% 52%;
+  --success-muted: 152 60% 52% / 0.12;
+  --warning: 38 92% 58%;
+  --warning-muted: 38 92% 58% / 0.12;
+  --danger: 0 72% 60%;
+  --danger-muted: 0 72% 60% / 0.12;
+  --info: 199 89% 60%;
+  --info-muted: 199 89% 60% / 0.12;
+
+  /* ---- Lines ---- */
+  --border: 215 25% 18%;
+  --border-strong: 215 22% 26%;
+  --ring: 38 92% 50%;
+
+  /* ---- Radii ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* ---- Elevation: one consistent scale, no ad-hoc shadows ---- */
+  --shadow-sm: 0 1px 2px hsl(222 47% 2% / 0.4);
+  --shadow-md: 0 4px 12px hsl(222 47% 2% / 0.45);
+  --shadow-lg: 0 12px 32px hsl(222 47% 2% / 0.5);
+  --shadow-focus: 0 0 0 2px hsl(var(--surface-base)), 0 0 0 4px hsl(var(--ring));
+
+  /* ---- Motion: one rhythm across the product ---- */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Z-index: declared once so nothing invents a z-9999 ---- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 20;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-toast: 60;
 }
 
-/* Dot grid */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+/* ============================================================================
+   BASE
+   ========================================================================= */
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header offset so anchor links don't land under the nav. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background: hsl(var(--surface-base));
+    color: hsl(var(--text-secondary));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings carry the display face and the primary text colour. */
+  h1, h2, h3, h4, h5, h6 {
+    color: hsl(var(--text-primary));
+    text-wrap: balance;
+  }
+
+  /* Every interactive element gets the same visible focus treatment.
+     Never remove this — keyboard users navigate entirely by it. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  /* Only suppress the ring for pointer users, never for keyboard. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--text-primary));
+  }
+
+  /* Figures line up in columns and don't jitter as values tick. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
 }
 
-/* Glass */
+/* ============================================================================
+   REDUCED MOTION
+   A global honour of the OS setting. Anything animated must survive this
+   being on — the billing dashboards must stay fully readable and operable.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ========================================================================= */
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: hsl(var(--surface-base)); }
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border-strong));
+  border-radius: 999px;
+  border: 3px solid hsl(var(--surface-base));
+}
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--text-subtle)); }
+
+/* ============================================================================
+   LEGACY — consumed by pages not yet migrated to the token components.
+   Removed in a later commit once every consumer is ported.
+   ========================================================================= */
+
 .glass {
   background: rgba(255,255,255,0.03);
   backdrop-filter: blur(20px);
@@ -51,7 +192,6 @@ body::before {
   box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(124,58,237,0.1);
 }
 
-/* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 30%, #818cf8 70%, #60a5fa 100%);
   -webkit-background-clip: text;
@@ -59,7 +199,6 @@ body::before {
   background-clip: text;
 }
 
-/* Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -74,12 +213,6 @@ body::before {
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-}
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
 }
 .btn-primary:hover {
   transform: translateY(-1px);
@@ -105,7 +238,6 @@ body::before {
   background: rgba(255,255,255,0.04);
 }
 
-/* Badge */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -120,7 +252,6 @@ body::before {
   letter-spacing: 0.01em;
 }
 
-/* Marquee */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -131,8 +262,3 @@ body::before {
   width: max-content;
 }
 .marquee-track:hover { animation-play-state: paused; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #030712; }
-::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.35); border-radius: 3px; }
