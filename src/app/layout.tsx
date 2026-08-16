@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '../components/layout/Providers';
@@ -53,16 +53,48 @@ const jetbrainsMono = localFont({
   fallback: ['ui-monospace', 'Menlo', 'monospace'],
 });
 
+const TITLE = 'SS-Billing — subscription billing on Stellar';
+const DESCRIPTION =
+  'Your subscriber signs once and a Soroban smart contract collects on schedule. Non-custodial recurring payments with no percentage cut and no card processor.';
+
 export const metadata: Metadata = {
-  title: 'Sa-Billing — Decentralized Subscription Billing on Stellar',
-  description:
-    'Automate recurring payments for your SaaS or membership platform — entirely enforced by Soroban smart contracts on the Stellar network. No intermediaries.',
-  keywords: ['Stellar', 'Soroban', 'subscription billing', 'Web3', 'DeFi', 'smart contracts', 'recurring payments'],
+  title: {
+    default: TITLE,
+    /* Dashboard routes supply their own title and get the product name
+       appended, instead of every page sharing one string. */
+    template: '%s — SS-Billing',
+  },
+  description: DESCRIPTION,
+  applicationName: 'SS-Billing',
+  keywords: [
+    'Stellar',
+    'Soroban',
+    'subscription billing',
+    'recurring payments',
+    'smart contracts',
+    'USDC',
+    'SEP-41',
+  ],
   openGraph: {
-    title: 'Sa-Billing — Decentralized Subscription Billing',
-    description: 'Trustless recurring payments powered by Stellar Soroban smart contracts.',
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: 'SS-Billing',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  /* Deliberately not setting maximumScale or userScalable: blocking pinch
+     zoom is a WCAG failure, and it is the single most common way a mobile
+     viewport tag breaks accessibility. */
+  themeColor: '#070b14',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
