@@ -6,7 +6,7 @@ import {
   Zap, Shield, Eye, RefreshCw, Lock, Code2, Globe,
   ArrowRight, CheckCircle2, TrendingUp, Activity,
 } from 'lucide-react';
-import { Navbar } from '../components/layout/Navbar';
+import { SiteHeader } from '../components/layout/SiteHeader';
 
 const inView = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -32,7 +32,7 @@ export default function HomePage() {
         <div style={{ position: 'absolute', bottom: '10%', left: '-10%', width: 500, height: 500, background: 'radial-gradient(ellipse, rgba(124,58,237,0.07) 0%, transparent 70%)', borderRadius: '50%' }} />
       </div>
 
-      <Navbar />
+      <SiteHeader />
 
       {/* ── HERO — centered, editorial ──────────────────────────────────── */}
       <section className="relative z-10 flex flex-col items-center text-center pt-36 pb-20 px-6">
