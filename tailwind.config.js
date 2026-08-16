@@ -1,52 +1,121 @@
 /** @type {import('tailwindcss').Config} */
+
+/**
+ * Every colour resolves to a CSS custom property defined in globals.css.
+ * The <alpha-value> placeholder lets Tailwind's opacity modifiers work on
+ * token colours, so `bg-primary/12` stays possible without a second token.
+ */
+const token = (name) => `hsl(var(--${name}) / <alpha-value>)`;
+
 module.exports = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        brand: {
-          DEFAULT: '#7C3AED',
-          dark: '#5B21B6',
-          blue: '#3B82F6',
-        },
         surface: {
-          DEFAULT: '#050816',
-          secondary: '#0B1120',
-          card: '#0D1526',
-          border: 'rgba(255,255,255,0.08)',
+          DEFAULT: token('surface-base'),
+          base: token('surface-base'),
+          sunken: token('surface-sunken'),
+          raised: token('surface-raised'),
+          overlay: token('surface-overlay'),
         },
-        text: {
-          primary: '#F8FAFC',
-          muted: '#94A3B8',
+        content: {
+          DEFAULT: token('text-secondary'),
+          primary: token('text-primary'),
+          secondary: token('text-secondary'),
+          muted: token('text-muted'),
+          subtle: token('text-subtle'),
         },
+        primary: {
+          DEFAULT: token('primary'),
+          hover: token('primary-hover'),
+        },
+        'on-primary': token('on-primary'),
+        accent: token('accent'),
+        success: token('success'),
+        warning: token('warning'),
+        danger: token('danger'),
+        info: token('info'),
+        line: {
+          DEFAULT: token('border'),
+          strong: token('border-strong'),
+        },
+        ring: token('ring'),
       },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-glow': 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.3), transparent)',
-        'card-glow': 'radial-gradient(ellipse at top, rgba(124,58,237,0.15), transparent)',
-      },
+
       boxShadow: {
-        'glow-purple': '0 0 40px rgba(124,58,237,0.25)',
-        'glow-blue': '0 0 40px rgba(59,130,246,0.2)',
-        'card': '0 4px 24px rgba(0,0,0,0.4)',
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        focus: 'var(--shadow-focus)',
       },
-      animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
-        'glow': 'glow 3s ease-in-out infinite alternate',
+
+      transitionDuration: {
+        fast: 'var(--duration-fast)',
+        normal: 'var(--duration-normal)',
+        slow: 'var(--duration-slow)',
       },
+
+      transitionTimingFunction: {
+        out: 'var(--ease-out)',
+        'in-out': 'var(--ease-in-out)',
+      },
+
+      zIndex: {
+        raised: 'var(--z-raised)',
+        sticky: 'var(--z-sticky)',
+        overlay: 'var(--z-overlay)',
+        modal: 'var(--z-modal)',
+        toast: 'var(--z-toast)',
+      },
+
+      /* A 12/14/16/18/20/24/30/36/48/60/72 ramp. Body never drops below 14px,
+         and 16px is the mobile input floor that stops iOS auto-zoom. */
+      fontSize: {
+        '2xs': ['0.6875rem', { lineHeight: '1rem', letterSpacing: '0.02em' }],
+        xs: ['0.75rem', { lineHeight: '1.125rem' }],
+        sm: ['0.875rem', { lineHeight: '1.375rem' }],
+        base: ['1rem', { lineHeight: '1.625rem' }],
+        lg: ['1.125rem', { lineHeight: '1.75rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.01em' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.015em' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.02em' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.025em' }],
+        '5xl': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
+        '6xl': ['3.75rem', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
+        '7xl': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.035em' }],
+      },
+
+      maxWidth: {
+        /* ~68 characters at base size — the readable measure for body copy. */
+        prose: '34rem',
+      },
+
       keyframes: {
-        float: {
-          '0%,100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-12px)' },
+        'fade-up': {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'none' },
         },
-        glow: {
-          '0%': { opacity: '0.5' },
-          '100%': { opacity: '1' },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
         },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+      },
+
+      animation: {
+        'fade-up': 'fade-up var(--duration-slow) var(--ease-out) both',
+        shimmer: 'shimmer 1.8s infinite',
+        marquee: 'marquee 40s linear infinite',
       },
     },
   },

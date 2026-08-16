@@ -51,11 +51,20 @@ SS-Billing/
 │       ├── db/                   # TypeORM entities + data source
 │       └── config/               # App, Stellar, Redis config
 ├── frontend/                     # Next.js 14 app
+│   ├── postcss.config.js         # REQUIRED — without it Tailwind never runs
+│   ├── tailwind.config.js        # Maps Tailwind's scale onto the CSS tokens
 │   └── src/
-│       ├── app/                  # App Router pages
-│       ├── components/           # UI components + charts
+│       ├── app/                  # App Router pages + globals.css (tokens)
+│       ├── components/
+│       │   ├── ui/               # Primitives: Button, Surface, StatCard…
+│       │   ├── layout/           # Headers, footer, logo, skip link
+│       │   ├── marketing/        # Landing sections
+│       │   ├── charts/           # Recharts wrappers
+│       │   └── wallet/           # Freighter connect controls
+│       ├── fonts/                # Self-hosted woff2 (no runtime CDN call)
+│       ├── types/                # API domain types
 │       ├── store/                # Zustand wallet state
-│       └── lib/                  # API client
+│       └── lib/                  # API client, formatters, cn()
 ├── packages/
 │   ├── types/                    # Shared TypeScript types
 │   ├── sdk/                      # Contract interaction SDK
@@ -65,6 +74,39 @@ SS-Billing/
     ├── docker/                   # Dockerfiles + docker-compose
     └── monitoring/               # Prometheus + Grafana
 ```
+
+---
+
+## Frontend design system
+
+All colour, spacing, radius, shadow, motion and z-index values are CSS custom
+properties defined once in `src/app/globals.css`, surfaced to Tailwind through
+`tailwind.config.js`. Components reference semantic names — `bg-surface-raised`,
+`text-content-muted`, `ring` — and never a raw hex.
+
+| Concern | Where |
+|---|---|
+| Tokens | `src/app/globals.css` (`:root`) |
+| Tailwind mapping | `tailwind.config.js` |
+| Primitives | `src/components/ui/` |
+| Formatting (stroops, dates, addresses) | `src/lib/format.ts` |
+
+**Conventions**
+
+- Monetary values arrive as stroop integer *strings* and stay strings until
+  `lib/format.ts` converts them. That conversion uses BigInt — above ~900M
+  units, `Number(x) / 1e7` silently loses precision.
+- Status is never conveyed by colour alone; every state pairs a colour with an
+  icon and screen-reader text.
+- Figures use the `.tabular` class so columns align and values don't jitter.
+- Scroll reveals are CSS transitions toggled by `Reveal.tsx`, not a JS
+  animation library — the global `prefers-reduced-motion` rule cancels
+  WAAPI-driven animations mid-flight and would strand content at `opacity: 0`.
+
+**`postcss.config.js` is required.** Without it Next.js silently skips Tailwind:
+the `@tailwind` directives are stripped, every utility class resolves to
+nothing, and the app renders as unstyled HTML while still appearing correct in
+source.
 
 ---
 
