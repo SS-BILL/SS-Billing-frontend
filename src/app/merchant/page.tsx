@@ -4,7 +4,7 @@ import { analyticsApi, planApi } from '../../lib/api';
 import { useWallet } from '../../store/wallet.store';
 import { StatCard } from '../../components/ui/StatCard';
 import { RevenueChart } from '../../components/charts/RevenueChart';
-import { Navbar } from '../../components/layout/Navbar';
+import { AppHeader } from '../../components/layout/AppHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 
 export default function MerchantDashboard() {
@@ -31,7 +31,7 @@ export default function MerchantDashboard() {
   if (!address) {
     return (
       <>
-        <Navbar />
+        <AppHeader />
         <div className="min-h-screen flex items-center justify-center pt-16">
           <p className="text-gray-400">Connect your wallet to view the merchant dashboard.</p>
         </div>
@@ -41,7 +41,7 @@ export default function MerchantDashboard() {
 
   return (
     <>
-      <Navbar />
+      <AppHeader />
       <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-2xl font-bold mb-8">Merchant Dashboard</h1>
 

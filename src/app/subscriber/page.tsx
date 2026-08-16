@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { subscriptionApi } from '../../lib/api';
 import { useWallet } from '../../store/wallet.store';
 import { StatusBadge } from '../../components/ui/StatusBadge';
-import { Navbar } from '../../components/layout/Navbar';
+import { AppHeader } from '../../components/layout/AppHeader';
 
 export default function SubscriberDashboard() {
   const { address } = useWallet();
@@ -31,7 +31,7 @@ export default function SubscriberDashboard() {
   if (!address) {
     return (
       <>
-        <Navbar />
+        <AppHeader />
         <div className="min-h-screen flex items-center justify-center pt-16">
           <p className="text-gray-400">Connect your wallet to view your subscriptions.</p>
         </div>
@@ -41,7 +41,7 @@ export default function SubscriberDashboard() {
 
   return (
     <>
-      <Navbar />
+      <AppHeader />
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-2xl font-bold mb-8">My Subscriptions</h1>
         <div className="space-y-4">
